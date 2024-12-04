@@ -35,7 +35,7 @@ int main() {
         printf("3. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-        getchar(); 
+        getchar(); // Consume newline left in the buffer
         switch (choice) {
             case 1:
                 login(users, &userCount);
@@ -63,8 +63,7 @@ void signup(User users[], int *userCount) {
     User newUser;
     printf("\n--- SIGNUP ---\n");
     printf("Enter User ID: ");
-    fgets(newUser.userId, MAX_LEN, stdin);
-    newUser.userId[strcspn(newUser.userId, "\n")] = 0; 
+    scanf("%s", newUser.userId);
 
     // Check if User ID already exists
     if (isUserIdExists(users, *userCount, newUser.userId)) {
@@ -73,8 +72,7 @@ void signup(User users[], int *userCount) {
     }
 
     printf("Enter Password: ");
-    fgets(newUser.password, MAX_LEN, stdin);
-    newUser.password[strcspn(newUser.password, "\n")] = 0; // Remove newline character
+    scanf("%s", newUser.password);
 
     // Initialize task count to 0
     newUser.taskCount = 0;
@@ -104,7 +102,6 @@ void login(User users[], int *userCount) {
     int selectedUser;
     printf("Enter the number corresponding to your User ID: ");
     scanf("%d", &selectedUser);
-    getchar(); // Consume trailing newline
 
     // Validate the selected user
     if (selectedUser < 1 || selectedUser > *userCount) {
@@ -118,8 +115,7 @@ void login(User users[], int *userCount) {
     // Ask for password
     char password[MAX_LEN];
     printf("Enter your Password: ");
-    fgets(password, MAX_LEN, stdin);
-    password[strcspn(password, "\n")] = 0; // Remove newline character
+    scanf("%s", password);
 
     if (strcmp(users[userIndex].password, password) == 0) {
         printf("Login successful! Welcome, %s!\n", users[userIndex].userId);
@@ -134,7 +130,6 @@ void login(User users[], int *userCount) {
             printf("4. Logout\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
-            getchar(); // Consume trailing newline
 
             switch (choice) {
                 case 1:
@@ -176,8 +171,8 @@ void addData(User *user) {
     }
 
     printf("Enter the task: ");
-    fgets(user->tasks[user->taskCount].task, MAX_LEN, stdin);
-    user->tasks[user->taskCount].task[strcspn(user->tasks[user->taskCount].task, "\n")] = 0; // Remove newline character
+    getchar(); // Consume leftover newline
+    scanf("%[^\n]", user->tasks[user->taskCount].task);
 
     user->taskCount++;
     printf("Task added successfully!\n");
@@ -208,7 +203,6 @@ void deleteData(User *user) {
     showData(user);
     printf("Enter the task number to delete: ");
     scanf("%d", &taskNumber);
-    getchar(); // Consume trailing newline
 
     if (taskNumber < 1 || taskNumber > user->taskCount) {
         printf("Invalid task number. Please try again.\n");
